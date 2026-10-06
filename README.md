@@ -1,1 +1,1 @@
-# WarehouseInventory
+# WarehouseInventory — система учёта товаров на складе
