@@ -1,1 +1,1 @@
-# warehouse-inventory-management-system
+# WarehouseInventory
