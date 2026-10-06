@@ -6,8 +6,6 @@ namespace WarehouseInventory.Inventory;
 public class StockUpdateService : IStockUpdateService
 {
     private readonly ILogger<StockUpdateService> _logger;
-
-    // Имитация базы данных для демонстрации (изначально 10 единиц)
     private decimal _currentBalance = 10.0m;
 
     public StockUpdateService(ILogger<StockUpdateService> logger)
@@ -15,25 +13,44 @@ public class StockUpdateService : IStockUpdateService
         _logger = logger;
     }
 
-    public async Task<StockUpdateResult> DeductStockAsync(DeductStockRequest request, CancellationToken cancellationToken)
+    public Task<StockUpdateResult> AddStockAsync(AddStockRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Попытка списания {Quantity} ед. товара {ItemId} со склада {WarehouseId}",
+        _logger.LogInformation("Оприходование: +{Quantity} ед. товара {ItemId} на склад {WarehouseId}",
             request.Quantity, request.ItemId, request.WarehouseId);
 
-        // Отрицательный сценарий: проверка остатка
-        if (_currentBalance < request.Quantity)
+        if (request.Quantity <= 0)
         {
-            _logger.LogWarning("Недостаточно остатков для товара {ItemId}. Запрошено: {Requested}, Доступно: {Available}",
-                request.ItemId, request.Quantity, _currentBalance);
-
-            return new StockUpdateResult(false, _currentBalance, "INSUFFICIENT_STOCK");
+            _logger.LogWarning("Некорректное количество: {Quantity}", request.Quantity);
+            return Task.FromResult(new StockUpdateResult(false, _currentBalance, "INVALID_QUANTITY"));
         }
 
-        // Успешный сценарий
-        _currentBalance -= request.Quantity;
-        _logger.LogInformation("Успешное списание. Новый остаток товара {ItemId}: {NewBalance}",
-            request.ItemId, _currentBalance);
+        _currentBalance += request.Quantity;
 
-        return await Task.FromResult(new StockUpdateResult(true, _currentBalance, null));
+        _logger.LogInformation("Оприходование успешно. Новый остаток: {Balance}", _currentBalance);
+        return Task.FromResult(new StockUpdateResult(true, _currentBalance, null));
+    }
+
+    public Task<StockUpdateResult> DeductStockAsync(DeductStockRequest request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Отгрузка: -{Quantity} ед. товара {ItemId} со склада {WarehouseId}",
+            request.Quantity, request.ItemId, request.WarehouseId);
+
+        if (request.Quantity <= 0)
+        {
+            _logger.LogWarning("Некорректное количество: {Quantity}", request.Quantity);
+            return Task.FromResult(new StockUpdateResult(false, _currentBalance, "INVALID_QUANTITY"));
+        }
+
+        if (_currentBalance < request.Quantity)
+        {
+            _logger.LogWarning("Недостаточно остатков. Запрошено: {Requested}, Доступно: {Available}",
+                request.Quantity, _currentBalance);
+            return Task.FromResult(new StockUpdateResult(false, _currentBalance, "INSUFFICIENT_STOCK"));
+        }
+
+        _currentBalance -= request.Quantity;
+
+        _logger.LogInformation("Отгрузка успешна. Новый остаток: {Balance}", _currentBalance);
+        return Task.FromResult(new StockUpdateResult(true, _currentBalance, null));
     }
 }
