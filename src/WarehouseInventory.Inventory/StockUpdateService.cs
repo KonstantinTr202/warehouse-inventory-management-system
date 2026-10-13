@@ -32,6 +32,8 @@ public class StockUpdateService : IStockUpdateService
 
     public Task<StockUpdateResult> DeductStockAsync(DeductStockRequest request, CancellationToken cancellationToken)
     {
+        _logger.LogInformation($"Комментарий к операции: {request.Comment ?? "без комментария"}");
+
         _logger.LogInformation("Отгрузка: -{Quantity} ед. товара {ItemId} со склада {WarehouseId}",
             request.Quantity, request.ItemId, request.WarehouseId);
 
@@ -45,6 +47,7 @@ public class StockUpdateService : IStockUpdateService
         {
             _logger.LogWarning("Недостаточно остатков. Запрошено: {Requested}, Доступно: {Available}",
                 request.Quantity, _currentBalance);
+
             return Task.FromResult(new StockUpdateResult(false, _currentBalance, "INSUFFICIENT_STOCK"));
         }
 

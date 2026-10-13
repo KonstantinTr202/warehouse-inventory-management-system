@@ -11,7 +11,8 @@ public record DeductStockRequest(
     Guid ItemId,
     Guid WarehouseId,
     decimal Quantity,
-    Guid MovementDocumentId
+    Guid MovementDocumentId,
+    string? Comment
 );
 
 public record StockUpdateResult(
