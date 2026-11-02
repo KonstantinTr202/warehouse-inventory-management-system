@@ -15,6 +15,9 @@ public class StockUpdateService : IStockUpdateService
 
     public Task<StockUpdateResult> AddStockAsync(AddStockRequest request, CancellationToken cancellationToken)
     {
+        ArgumentNullException.ThrowIfNull(request);
+        cancellationToken.ThrowIfCancellationRequested();
+
         _logger.LogInformation("Оприходование: +{Quantity} ед. товара {ItemId} на склад {WarehouseId}",
             request.Quantity, request.ItemId, request.WarehouseId);
 
@@ -32,7 +35,8 @@ public class StockUpdateService : IStockUpdateService
 
     public Task<StockUpdateResult> DeductStockAsync(DeductStockRequest request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation($"Комментарий к операции: {request.Comment ?? "без комментария"}");
+        ArgumentNullException.ThrowIfNull(request);
+        cancellationToken.ThrowIfCancellationRequested();
 
         _logger.LogInformation("Отгрузка: -{Quantity} ед. товара {ItemId} со склада {WarehouseId}",
             request.Quantity, request.ItemId, request.WarehouseId);
