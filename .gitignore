@@ -1,4 +1,4 @@
-# Результаты сборки .NET
+# Р РµР·СѓР»СЊС‚Р°С‚С‹ СЃР±РѕСЂРєРё .NET
 [Bb]in/
 [Oo]bj/
 [Dd]ebug/
@@ -19,7 +19,7 @@ _ReSharper*/
 **/[Pp]ackages/
 *.nupkg
 
-# Секреты
+# РЎРµРєСЂРµС‚С‹
 appsettings.Development.json
 *.pfx
 *.key
@@ -30,6 +30,6 @@ secrets.json
 Thumbs.db
 .DS_Store
 
-# Тесты и покрытие
+# РўРµСЃС‚С‹ Рё РїРѕРєСЂС‹С‚РёРµ
 *.trx
 *.coverage

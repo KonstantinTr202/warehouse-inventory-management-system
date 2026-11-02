@@ -3,19 +3,19 @@ using WarehouseInventory.Inventory;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Добавляем контроллеры
+// Р”РѕР±Р°РІР»СЏРµРј РєРѕРЅС‚СЂРѕР»Р»РµСЂС‹
 builder.Services.AddControllers();
 
-// Регистрируем сервис учёта остатков
+// Р РµРіРёСЃС‚СЂРёСЂСѓРµРј СЃРµСЂРІРёСЃ СѓС‡С‘С‚Р° РѕСЃС‚Р°С‚РєРѕРІ
 builder.Services.AddSingleton<IStockUpdateService, StockUpdateService>();
 
-// Настраиваем Swagger для документации API
+// РќР°СЃС‚СЂР°РёРІР°РµРј Swagger РґР»СЏ РґРѕРєСѓРјРµРЅС‚Р°С†РёРё API
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Включаем Swagger в режиме разработки
+// Р’РєР»СЋС‡Р°РµРј Swagger РІ СЂРµР¶РёРјРµ СЂР°Р·СЂР°Р±РѕС‚РєРё
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
